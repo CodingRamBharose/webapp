@@ -1,34 +1,45 @@
 pipeline {
-    agent {
-        label 'master'
+    agent { label 'master' }
+
+    // 👇 This tells Jenkins to use the Maven you defined in "Global Tool Configuration"
+    tools {
+        maven 'Maven-3.9.11'
     }
+
     stages {
         stage('Build') {
             steps {
-                bat 'mvn -B -DskipTests clean package'
+                // Use %MAVEN_HOME% so it always finds Maven even when Jenkins runs as service
+                bat '"%MAVEN_HOME%\\bin\\mvn.cmd" -B -DskipTests clean package'
             }
         }
-//         stage('Sonar-Report') {
-//             steps {
-//             sh 'mvn sonar:sonar \
-//   -Dsonar.projectKey=jenkins_project \
-//   -Dsonar.host.url=http://localhost:9000 \
-//   -Dsonar.login=5f09ded7e5db4d0ea0dcfd937c181af706e60475'
-//             }
-//         }
+
         stage('Test') { 
             steps {
-                bat 'mvn test' 
+                bat '"%MAVEN_HOME%\\bin\\mvn.cmd" test'
             }
             post {
                 always {
-                    junit 'target/surefire-reports/*.xml' 
+                    junit 'target/surefire-reports/*.xml'
                 }
             }
         }
+
         stage('Sonar-Report') {
             steps {
-                bat 'mvn clean install sonar:sonar -Dsonar.host.url=http://localhost:9000 -Dsonar.analysis.mode=publish'
+                bat '"%MAVEN_HOME%\\bin\\mvn.cmd" clean install sonar:sonar -Dsonar.host.url=http://localhost:9000 -Dsonar.analysis.mode=publish'
+            }
+        }
+
+        stage('Deploy to Nexus') {
+            steps {
+                bat '"%MAVEN_HOME%\\bin\\mvn.cmd" clean deploy'
+            }
+        }
+
+        stage('Done') {
+            steps {
+                echo '✅ Build, Test, Sonar, and Nexus Deploy completed successfully!'
             }
         }
     }
