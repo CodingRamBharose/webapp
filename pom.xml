@@ -1,9 +1,12 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
+
   <groupId>com.puppet.sample</groupId>
   <artifactId>java-webapp</artifactId>
-  <packaging>jar</packaging>
+  <packaging>war</packaging>
   <version>1.0</version>
   <name>java-webapp</name>
   <url>http://maven.apache.org</url>
@@ -21,74 +24,73 @@
       <version>4.8.1</version>
       <scope>test</scope>
     </dependency>
+
     <dependency>
-        <groupId>com.sparkjava</groupId>
-        <artifactId>spark-core</artifactId>
-        <version>2.7.2</version>
+      <groupId>com.sparkjava</groupId>
+      <artifactId>spark-core</artifactId>
+      <version>2.7.2</version>
     </dependency>
+
     <dependency>
-        <groupId>com.sparkjava</groupId>
-        <artifactId>spark-template-freemarker</artifactId>
-        <version>2.5.5</version>
+      <groupId>com.sparkjava</groupId>
+      <artifactId>spark-template-freemarker</artifactId>
+      <version>2.5.5</version>
     </dependency>
+
     <dependency>
-       <groupId>org.slf4j</groupId>
-       <artifactId>slf4j-api</artifactId>
-       <version>1.7.5</version>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>1.7.5</version>
     </dependency>
+
     <dependency>
-       <groupId>org.slf4j</groupId>
-       <artifactId>slf4j-log4j12</artifactId>
-       <version>1.7.5</version>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-log4j12</artifactId>
+      <version>1.7.5</version>
     </dependency>
+
     <dependency>
-        <groupId>com.sparkjava</groupId>
-        <artifactId>spark-template-thymeleaf</artifactId>
-        <version>2.3</version>
+      <groupId>com.sparkjava</groupId>
+      <artifactId>spark-template-thymeleaf</artifactId>
+      <version>2.3</version>
     </dependency>
+
     <dependency>
-		  <groupId>org.sonarsource.scanner.maven</groupId>
-		  <artifactId>sonar-maven-plugin</artifactId>
-		  <version>3.2</version>
-	  </dependency>
+      <groupId>org.sonarsource.scanner.maven</groupId>
+      <artifactId>sonar-maven-plugin</artifactId>
+      <version>3.2</version>
+    </dependency>
   </dependencies>
 
   <build>
+    <finalName>java-webapp-1.0</finalName>
     <plugins>
+      <!-- Make a WAR -->
       <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-jar-plugin</artifactId>
-          <version>3.0.2</version>
-          <configuration>
-              <archive>
-                  <manifest>
-                      <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                      <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-                  </manifest>
-              </archive>
-          </configuration>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>3.3.2</version>
+        <configuration>
+          <!-- if you have webapp resources, ensure webappDirectory or warSourceDirectory are correct -->
+          <!-- warSourceDirectory defaults to src/main/webapp -->
+        </configuration>
       </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-shade-plugin</artifactId>
-        <version>3.1.0</version>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>shade</goal>
-            </goals>
-            <configuration>
-              <transformers>
-                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                  <mainClass>com.puppet.sample.App</mainClass>
-                </transformer>
-              </transformers>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
+
+      <!-- Keep jar/shade plugins removed because the artifact will be a WAR -->
     </plugins>
   </build>
+
+  <!-- Distribution management: where to deploy to Nexus -->
+  <distributionManagement>
+    <repository>
+      <id>nexus</id>
+      <name>internal-releases</name>
+      <url>http://127.0.0.1:8081/repository/upes/</url>
+    </repository>
+    <snapshotRepository>
+      <id>nexus</id>
+      <name>internal-snapshots</name>
+      <url>http://127.0.0.1:8081/repository/maven-snapshots/</url>
+    </snapshotRepository>
+  </distributionManagement>
 
 </project>
