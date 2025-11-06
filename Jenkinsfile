@@ -6,7 +6,7 @@ pipeline {
     }
 
     environment {
-        SONARQUBE = 'sonarqube'   // Name must match Manage Jenkins → System → SonarQube Servers
+        SONARQUBE = 'SonarQube'   // Name must match Manage Jenkins → System → SonarQube Servers
     }
 
     stages {
