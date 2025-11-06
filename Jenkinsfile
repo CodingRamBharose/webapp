@@ -1,15 +1,18 @@
 pipeline {
     agent { label 'master' }
 
-    // 👇 This tells Jenkins to use the Maven you defined in "Global Tool Configuration"
     tools {
-        maven 'Maven-3.9.11'
+        maven 'Maven-3.9.11'   // Name must match Manage Jenkins → Tools → Maven installations
+    }
+
+    environment {
+        SONARQUBE = 'sonarqube'   // Name must match Manage Jenkins → System → SonarQube Servers
     }
 
     stages {
+
         stage('Build') {
             steps {
-                // Use %MAVEN_HOME% so it always finds Maven even when Jenkins runs as service
                 bat '"%MAVEN_HOME%\\bin\\mvn.cmd" -B -DskipTests clean package'
             }
         }
@@ -25,9 +28,11 @@ pipeline {
             }
         }
 
-        stage('Sonar-Report') {
+        stage('Sonar Analysis') {
             steps {
-                bat '"%MAVEN_HOME%\\bin\\mvn.cmd" clean install sonar:sonar -Dsonar.host.url=http://localhost:9000 -Dsonar.analysis.mode=publish'
+                withSonarQubeEnv('sonarqube') {
+                    bat '"%MAVEN_HOME%\\bin\\mvn.cmd" sonar:sonar -Dsonar.projectKey=java-webapp'
+                }
             }
         }
 
