@@ -2,11 +2,11 @@ pipeline {
     agent { label 'master' }
 
     tools {
-        maven 'Maven-3.9.11'   // Name must match Manage Jenkins → Tools → Maven installations
+        maven 'Maven-3.9.11'
     }
 
     environment {
-        SONARQUBE = 'SonarQube'   // Name must match Manage Jenkins → System → SonarQube Servers
+        SONARQUBE = 'SonarQube'   // Must match Jenkins → System → SonarQube Servers → Name
     }
 
     stages {
@@ -30,7 +30,7 @@ pipeline {
 
         stage('Sonar Analysis') {
             steps {
-                withSonarQubeEnv('sonarqube') {
+                withSonarQubeEnv("${env.SONARQUBE}") {
                     bat '"%MAVEN_HOME%\\bin\\mvn.cmd" sonar:sonar -Dsonar.projectKey=java-webapp'
                 }
             }
