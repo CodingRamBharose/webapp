@@ -6,7 +6,7 @@ pipeline {
     }
 
     environment {
-        SONARQUBE = 'SonarQube'   // Must match Jenkins → System → SonarQube Servers → Name
+        SONARQUBE = 'SonarQube'  // Must match Jenkins → System → SonarQube Servers → Name
     }
 
     stages {
@@ -38,7 +38,8 @@ pipeline {
 
         stage('Deploy to Nexus') {
             steps {
-                bat '"%MAVEN_HOME%\\bin\\mvn.cmd" clean deploy'
+                // THIS IS THE LINE WE CHANGED:
+                bat '"%MAVEN_HOME%\\bin\\mvn.cmd" -s "C:\\Users\\codingrambharose\\.m2\\settings.xml" clean deploy'
             }
         }
 
